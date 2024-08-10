@@ -3,7 +3,9 @@ class Recipie {
   final String? images;
   final double? rating;
   final String? totalTime;
-  Recipie({this.name, this.images, this.rating, this.totalTime});
+  final String? authorName;
+  Recipie(
+      {this.name, this.images, this.rating, this.totalTime, this.authorName});
 
   factory Recipie.fromJson(dynamic json) {
     return Recipie(
@@ -11,6 +13,7 @@ class Recipie {
       images: json['images'][0]['hostedLargeUrl'] as String,
       rating: json['rating'] as double,
       totalTime: json['totalTime'] as String,
+      authorName: json['displayName'] as String,
     );
   }
 
@@ -26,6 +29,6 @@ class Recipie {
 
   @override
   String toString() {
-    return 'Recipie {name: $name , images: $images , rating:$rating, time:$totalTime}';
+    return 'Recipie {name: $name , images: $images , rating:$rating, time:$totalTime , authorName:$authorName}';
   }
 }
