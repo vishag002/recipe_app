@@ -5,6 +5,7 @@ import 'package:recipe_app/models/api_modal.dart';
 import 'package:recipe_app/models/receipe_model.dart';
 import 'package:recipe_app/utilis/color_const.dart';
 import 'package:recipe_app/utilis/text_const.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -62,10 +63,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 size: 25,
               ),
               Gap(20),
-              Icon(
-                Icons.calendar_month,
-                color: AppColors.white,
-                size: 25,
+              InkWell(
+                child: Icon(
+                  Icons.calendar_month,
+                  color: AppColors.white,
+                  size: 25,
+                ),
               ),
               Gap(30),
             ],
@@ -87,6 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       time: _recipies[index].totalTime.toString(),
                       imageUrl: _recipies[index].images.toString(),
                       authorName: _recipies[index].authorName.toString(),
+                      //   url: _recipies[index].url.toString(),
                     ),
                   ),
                 ),
@@ -101,6 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
     required String time,
     required String imageUrl,
     required String authorName,
+    // required String url,
     // required String followersCount,
   }) {
     return Padding(
@@ -111,72 +116,82 @@ class _HomeScreenState extends State<HomeScreen> {
         //  color: Colors.amber,
         child: Column(
           children: [
-            Container(
-              height: 230,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Colors.grey,
-                image: DecorationImage(
-                  image: NetworkImage(imageUrl),
-                  scale: 1,
-                  fit: BoxFit.cover,
+            InkWell(
+              onTap: () async {
+                const url = 'https://www.google.com';
+                if (await canLaunch(url)) {
+                  await launch(url);
+                } else {
+                  throw 'Could not launch $url';
+                }
+              },
+              child: Container(
+                height: 230,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.grey,
+                  image: DecorationImage(
+                    image: NetworkImage(imageUrl),
+                    scale: 1,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30, vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.blackBg,
-                            borderRadius: BorderRadius.circular(30),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.blackBg,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.star_half,
+                                  color: AppColors.white,
+                                  size: 20,
+                                ),
+                                Text(
+                                  rating,
+                                  style: TextStyles.subtitle,
+                                ),
+                                const SizedBox(width: 5),
+                              ],
+                            ),
                           ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.star_half,
-                                color: AppColors.white,
-                                size: 20,
-                              ),
-                              Text(
-                                rating,
-                                style: TextStyles.subtitle,
-                              ),
-                              const SizedBox(width: 5),
-                            ],
+                          Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.blackBg,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.timer_sharp,
+                                  color: AppColors.white,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 5),
+                                Text(
+                                  time,
+                                  style: TextStyles.subtitle,
+                                ),
+                                const SizedBox(width: 5),
+                              ],
+                            ),
                           ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.blackBg,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.timer_sharp,
-                                color: AppColors.white,
-                                size: 20,
-                              ),
-                              const SizedBox(width: 5),
-                              Text(
-                                time,
-                                style: TextStyles.subtitle,
-                              ),
-                              const SizedBox(width: 5),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
             Padding(
