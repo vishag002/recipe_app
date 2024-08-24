@@ -25,6 +25,12 @@ class _HomeScreenState extends State<HomeScreen> {
     getRecipies();
   }
 
+  Future<void> _launchUrl(Uri url) async {
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
   //
   Future<void> getRecipies() async {
     _recipies = await ReceipieApi.getRecipe();
@@ -54,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        actions: const [
+        actions: [
           Row(
             children: [
               Icon(
@@ -63,12 +69,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 size: 25,
               ),
               Gap(20),
-              InkWell(
-                child: Icon(
-                  Icons.calendar_month,
-                  color: AppColors.white,
-                  size: 25,
-                ),
+              Icon(
+                Icons.calendar_month,
+                color: AppColors.white,
+                size: 25,
               ),
               Gap(30),
             ],
@@ -90,6 +94,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       time: _recipies[index].totalTime.toString(),
                       imageUrl: _recipies[index].images.toString(),
                       authorName: _recipies[index].authorName.toString(),
+                      url: _recipies[index].url.toString(),
+                      //Uri url = Uri.parse(url),
+
                       //   url: _recipies[index].url.toString(),
                     ),
                   ),
@@ -105,25 +112,19 @@ class _HomeScreenState extends State<HomeScreen> {
     required String time,
     required String imageUrl,
     required String authorName,
-    // required String url,
-    // required String followersCount,
+    required String url,
   }) {
+    final Uri parsedUrl = Uri.parse(url); // Parse the URL string here
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        // height: 340,
-        //  color: Colors.amber,
         child: Column(
           children: [
             InkWell(
               onTap: () async {
-                const url = 'https://www.google.com';
-                if (await canLaunch(url)) {
-                  await launch(url);
-                } else {
-                  throw 'Could not launch $url';
-                }
+                await _launchUrl(parsedUrl); // Use parsed URL here
               },
               child: Container(
                 height: 230,
@@ -195,10 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                left: 10,
-                top: 5,
-              ),
+              padding: const EdgeInsets.only(left: 10, top: 5),
               child: Row(
                 children: [
                   Container(
@@ -216,7 +214,6 @@ class _HomeScreenState extends State<HomeScreen> {
               horizontalTitleGap: 10,
               minVerticalPadding: 0,
               minTileHeight: 0,
-              // tileColor: Colors.grey.shade900,
               leading: CircleAvatar(
                 radius: 20,
                 backgroundColor: AppColors.white,
@@ -236,9 +233,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: AppColors.primaryColor,
                 size: 25,
               ),
-            ),
-            Row(
-              children: [],
             ),
           ],
         ),
